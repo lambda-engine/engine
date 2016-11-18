@@ -7,9 +7,8 @@ import (
 
 	"google.golang.org/appengine/datastore"
 
-	"github.com/lambda-engine/engine/util"
 	"github.com/lambda-engine/engine/audit"
-
+	"github.com/lambda-engine/engine/util"
 )
 
 const (
@@ -21,6 +20,7 @@ type Metric struct {
 	Category string
 	Action   string
 	Label    string
+	Type     string
 	Value    int64
 	Created  int64
 }
@@ -41,6 +41,7 @@ func Count(ctx context.Context, category, action, label string, value int) {
 		category,
 		action,
 		label,
+		"count",
 		v,
 		now,
 	}
