@@ -12,22 +12,24 @@ import (
 )
 
 type Message struct {
-	Username string `json:"username"`
-	Channel  string `json:"channel"`
+	Username string `json:"username,omitempty"`
+	Channel  string `json:"channel,omitempty"`
 	Text     string `json:"text"`
+	Pretext  string `json:"pretext,omitempty"`
 }
 
-func SimpleNotification(r *http.Request, text string) error {
+func SimpleNotification(r *http.Request, text, pretext string) error {
 	ctx := appengine.NewContext(r)
-	return Notification(r, env.GetValue(ctx, "slack.webhook"), env.GetValue(ctx, "slack.channel"), env.GetValue(ctx, "slack.username"), text)
+	return Notification(r, env.GetValue(ctx, "slack.webhook"), env.GetValue(ctx, "slack.channel"), env.GetValue(ctx, "slack.username"), text, pretext)
 }
 
-func Notification(r *http.Request, webhook, channel, username, text string) error {
+func Notification(r *http.Request, webhook, channel, username, text, pretext string) error {
 
 	message := Message{
 		username,
 		channel,
 		text,
+		pretext,
 	}
 	m, err := json.Marshal(&message)
 	if err != nil {
