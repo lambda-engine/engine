@@ -4,9 +4,7 @@ import (
 	"golang.org/x/net/context"
 
 	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/memcache"
 
-	"github.com/lambda-engine/engine/audit"
 )
 
 const (
@@ -19,27 +17,27 @@ type Job struct {
 	LastRun int64
 }
 
-func LastRun(ctx context.Context, job string) int64 {
-	key := datastore.NewKey(ctx, DS_JOB, job, 0, nil)
+func LastRun(ctx context.Context, name string) int64 {
+	key := datastore.NewKey(ctx, DS_JOB, name, 0, nil)
 	var job Job
 
-	err = datastore.Get(ctx, key, &job)
+	err := datastore.Get(ctx, key, &job)
 	if err == nil {
 		return 0
 	}
 	return job.LastRun
 }
 
-func UpdateLastRun(ctx context.Context, job string, ts int64) error {
-	key := datastore.NewKey(ctx, DS_JOB, job, 0, nil)
+func UpdateLastRun(ctx context.Context, name string, ts int64) error {
+	key := datastore.NewKey(ctx, DS_JOB, name, 0, nil)
 	var job Job
 
-	err = datastore.Get(ctx, key, &job)
+	err := datastore.Get(ctx, key, &job)
 	if err == nil {
 		job = Job{
-			job,
+			name,
 			1,
-			LastRun,
+			ts,
 		}
 	} else {
 		job.Count = job.Count + 1
