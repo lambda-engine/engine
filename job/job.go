@@ -22,7 +22,7 @@ func LastRun(ctx context.Context, name string) int64 {
 	var job Job
 
 	err := datastore.Get(ctx, key, &job)
-	if err == nil {
+	if err != nil {
 		return 0
 	}
 	return job.LastRun
@@ -33,7 +33,7 @@ func UpdateLastRun(ctx context.Context, name string, ts int64) error {
 	var job Job
 
 	err := datastore.Get(ctx, key, &job)
-	if err == nil {
+	if err != nil {
 		job = Job{
 			name,
 			1,
